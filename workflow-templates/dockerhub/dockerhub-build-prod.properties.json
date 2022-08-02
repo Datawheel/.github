@@ -1,0 +1,7 @@
+{
+  "name": "DockerHub Production Environment",
+  "description": "Build and Push a Docker Image to DockerHub",
+  "categories": [
+      "YAML"
+  ]
+}
