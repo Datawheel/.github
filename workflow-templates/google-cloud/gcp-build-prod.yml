@@ -1,0 +1,39 @@
+name: "Build Production into Artifact Registry"
+
+# trigger the workflow when a release is published
+on:
+  release:
+    types: [published]
+
+# environment variables used for production environment
+env:
+  # docker variables
+  IMAGE_NAME: ${{ secrets.IMAGE_NAME }}
+  # google cloud secrets
+  GCP_ARTIFACT_REGISTRY_REPO_NAME: ${{ secrets.GCP_ARTIFACT_REGISTRY_REPO_NAME }}
+  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+
+jobs:
+  # get release version number
+  release:
+    name: Get release version number
+    environment: production_environment
+    steps:
+      - name: Get release version number
+        id: get_version
+        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+
+  # builds the docker image via cloud build
+  build:
+    needs: release
+    name: Build Production Docker Image
+    environment: production_environment
+    uses: Datawheel/.github/blob/main/workflow-templates/google-cloud/gcp-build-to-registry.yml@main
+    with:
+      IMAGE_NAME: ${{ env.IMAGE_NAME }}
+      IMAGE_TAG: ${{ steps.get_version.outputs.VERSION }}
+    secrets:
+      GCP_ARTIFACT_REGISTRY_REPO_NAME: ${{ env.GCP_ARTIFACT_REGISTRY_REPO_NAME }}
+      GCP_PROJECT_ID: ${{ env.GCP_PROJECT_ID }}
+      GCP_SA_KEY: ${{ env.GCP_SA_KEY }}
