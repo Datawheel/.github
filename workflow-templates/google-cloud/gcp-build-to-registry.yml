@@ -1,0 +1,49 @@
+name: "Build Docker Image into Artifact Registry"
+
+# trigger the workflow when another workflow calls it
+on:
+  workflow_call:
+    # list of inputs required by the workflow
+    inputs:
+      IMAGE_NAME:
+        description: 'Docker Image Name'
+        required: true
+        type: string
+      IMAGE_TAG:
+        description: 'Docker Image Tag'
+        required: true
+        type: string
+    # list of secrets required by the workflow
+    secrets:
+      GCP_ARTIFACT_REGISTRY_REPO_NAME:
+        description: "Google Cloud Artifact Registry Repository Name"
+        required: true
+      GCP_PROJECT_ID:
+        description: "Google Cloud Project ID"
+        required: true
+      GCP_SA_KEY:
+        description: "Google Cloud Service Account"
+        required: true
+
+jobs:
+  # builds the new docker image with cloud build
+  build:
+    name: Build Docker Image via Cloud Build
+    runs-on: ubuntu-latest
+    environment: develop_environment
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Build Docker Image
+        run: |-
+          gcloud builds submit \
+            --quiet \
+            --timeout=20m \
+            --tag us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REGISTRY_REPO_NAME }}/${{ input.IMAGE_NAME }}:${{ input.IMAGE_TAG }}
