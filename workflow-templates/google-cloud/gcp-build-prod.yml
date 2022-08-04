@@ -29,7 +29,7 @@ jobs:
     needs: release
     name: Build Production Docker Image
     environment: production_environment
-    uses: Datawheel/.github/blob/main/workflow-templates/google-cloud/gcp-build-to-registry.yml@main
+    uses: Datawheel/.github/workflow-templates/google-cloud/gcp-build-to-registry.yml@main
     with:
       IMAGE_NAME: ${{ env.IMAGE_NAME }}
       IMAGE_TAG: ${{ steps.get_version.outputs.VERSION }}
