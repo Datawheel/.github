@@ -1,0 +1,8 @@
+{
+  "name": "Google Cloud Deploy Prod Image",
+  "description": "Deploy a Docker Image of the Production Environment into Google Kubernetes Engine",
+  "iconName": "googlecloud",
+  "categories": [
+      "YAML"
+  ]
+}

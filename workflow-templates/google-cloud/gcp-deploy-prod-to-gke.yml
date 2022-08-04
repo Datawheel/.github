@@ -1,0 +1,30 @@
+name: "Deploy Production on Google Kubernetes Engine"
+
+# trigger the workflow when the build workflows has completed
+on:
+  workflow_run:
+    workflows: [Build Production into Artifact Registry, Build Production into DockerHub]
+    types: [completed]
+
+# environment variables used on the respective workflow
+env:
+  # google cloud secrets
+  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+  # google kubernetes engine secrets
+  GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
+  GKE_DEPLOYMENT_NAME: ${{ secrets.GKE_DEPLOYMENT_NAME }}
+  GKE_ZONE: ${{ secrets.GKE_ZONE }}
+
+jobs:
+  # deploy the docker image via google kubernetes engine
+  deploy:
+    name: Deploy Docker Image on GKE
+    environment: develop_environment
+    uses: Datawheel/.github/workflow-templates/workers/gcp-deploy-to-gke.yml@main
+    secrets:
+      GCP_PROJECT_ID: ${{ env.GCP_PROJECT_ID }}
+      GCP_SA_KEY: ${{ env.GCP_SA_KEY }}
+      GKE_CLUSTER: ${{ env.GKE_CLUSTER }}
+      GKE_DEPLOYMENT_NAME: ${{ env.GKE_DEPLOYMENT_NAME }}
+      GKE_ZONE: ${{ env.GKE_ZONE }}

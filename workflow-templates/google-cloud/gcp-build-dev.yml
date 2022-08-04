@@ -21,7 +21,7 @@ jobs:
   build:
     name: Build Development Docker Image
     environment: develop_environment
-    uses: Datawheel/.github/workflow-templates/google-cloud/gcp-build-to-registry.yml@main
+    uses: Datawheel/.github/workflow-templates/workers/gcp-build-to-registry.yml@main
     with:
       IMAGE_NAME: ${{ env.IMAGE_NAME }}
       IMAGE_TAG: ${{ env.IMAGE_TAG }}
