@@ -1,0 +1,46 @@
+name: "Deploy Deployment on Google Kubernetes Engine"
+
+# trigger the workflow when another workflow calls it
+on:
+  workflow_call:
+    # list of secrets required by the workflow
+    secrets:
+      GCP_PROJECT_ID:
+        description: "Google Cloud Project ID"
+        required: true
+      GCP_SA_KEY:
+        description: "Google Cloud Service Account"
+        required: true
+      GKE_CLUSTER:
+        description: "Google Kubernetes Engine Cluster"
+        required: true
+      GKE_DEPLOYMENT_NAME:
+        description: "Google Kubernetes Engine Deployment Name"
+        required: true
+      GKE_ZONE:
+        description: "Google Kubernetes Engine Zone"
+        required: true
+
+jobs:
+  # deploys the image to a cluster on gke
+  deploy:
+    name: Deploy Docker Image on GKE
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Get GKE Credentials
+        uses: google-github-actions/get-gke-credentials@v0
+        with:
+          cluster_name: ${{ secrets.GKE_CLUSTER }}
+          location: ${{ secrets.GKE_ZONE }}
+
+      - name: Restart Deployment
+        run: kubectl rollout restart deployment/${{ secrets.GKE_DEPLOYMENT_NAME }}

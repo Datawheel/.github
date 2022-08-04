@@ -1,8 +1,0 @@
-{
-  "name": "Google Cloud Build Image",
-  "description": "Build a Docker Image into Google Artifact Registry",
-  "iconName": "googlecloud",
-  "categories": [
-      "YAML"
-  ]
-}
