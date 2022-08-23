@@ -13,24 +13,17 @@ on:
         description: 'Docker Image Tag'
         required: true
         type: string
-    # list of secrets required by the workflow
-    secrets:
-      GCP_ARTIFACT_REGISTRY_REPO_NAME:
-        description: "Google Cloud Artifact Registry Repository Name"
-        required: true
-      GCP_PROJECT_ID:
-        description: "Google Cloud Project ID"
-        required: true
-      GCP_SA_KEY:
-        description: "Google Cloud Service Account"
-        required: true
+      IMAGE_ENVIRONMENT:
+        description: 'Project Environment'
+        required: false
+        default: 'dev'
+        type: string
 
 jobs:
   # builds the new docker image with cloud build
   build:
     name: Build Docker Image via Cloud Build
     runs-on: ubuntu-latest
-    environment: develop_environment
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v3
@@ -47,3 +40,11 @@ jobs:
             --quiet \
             --timeout=20m \
             --tag us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REGISTRY_REPO_NAME }}/${{ input.IMAGE_NAME }}:${{ input.IMAGE_TAG }}
+
+      - name: Add Latest Tag
+        if: ${{ inputs.IMAGE_ENVIRONMENT }} == 'dev'
+        run: |-
+          gcloud beta artifacts docker tags add \
+            --quiet \
+            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REGISTRY_REPO_NAME }}/${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_TAG }} \
+            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REGISTRY_REPO_NAME }}/${{ inputs.IMAGE_NAME }}:latest
