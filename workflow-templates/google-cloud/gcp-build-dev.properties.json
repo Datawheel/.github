@@ -1,5 +1,5 @@
 {
-  "name": "Google Cloud Build Dev Image",
+  "name": "Google Cloud Build - Dev",
   "description": "Build a Docker Image of the Develop Environment into Google Artifact Registry",
   "iconName": "googlecloud",
   "categories": [

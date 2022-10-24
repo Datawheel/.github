@@ -1,4 +1,4 @@
-name: "Build Development into Artifact Registry"
+name: "Build Development Docker Image into Artifact Registry"
 
 # trigger the workflow when a push is committed to the develop branch
 on:
@@ -6,26 +6,11 @@ on:
     branches:
       - develop
 
-# environment variables used for development environment
-env:
-  # docker variables
-  IMAGE_NAME: ${{ secrets.IMAGE_NAME }}
-  IMAGE_TAG: ${{ github.head_ref }}
-  # google cloud secrets
-  GCP_ARTIFACT_REGISTRY_REPO_NAME: ${{ secrets.GCP_ARTIFACT_REGISTRY_REPO_NAME }}
-  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-
 jobs:
   # builds the docker image via cloud build
   build:
-    name: Build Development Docker Image
-    environment: develop_environment
-    uses: Datawheel/.github/workflow-templates/workers/gcp-build-to-registry.yml@main
+    name: Build Development Docker Image into Artifact Registry
+    uses: Datawheel/.github/.github/workflows/gcp-build-to-registry.yml@main
     with:
-      IMAGE_NAME: ${{ env.IMAGE_NAME }}
-      IMAGE_TAG: ${{ env.IMAGE_TAG }}
-    secrets:
-      GCP_ARTIFACT_REGISTRY_REPO_NAME: ${{ env.GCP_ARTIFACT_REGISTRY_REPO_NAME }}
-      GCP_PROJECT_ID: ${{ env.GCP_PROJECT_ID }}
-      GCP_SA_KEY: ${{ env.GCP_SA_KEY }}
+      IMAGE_TAG: ${{ github.sha }}
+    secrets: inherit

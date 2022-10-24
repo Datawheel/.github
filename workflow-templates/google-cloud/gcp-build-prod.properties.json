@@ -1,5 +1,5 @@
 {
-  "name": "Google Cloud Build Prod Image",
+  "name": "Google Cloud Build - Prod",
   "description": "Build a Docker Image of the Production Environment into Google Artifact Registry",
   "iconName": "googlecloud",
   "categories": [
