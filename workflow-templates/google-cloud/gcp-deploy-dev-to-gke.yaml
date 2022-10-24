@@ -11,5 +11,5 @@ jobs:
   # deploy the docker image via google kubernetes engine
   deploy:
     name: Deploy Docker Image into Google Kubernetes Engine
-    uses: Datawheel/.github/.github/workflows/gcp-deploy-to-gke.yml@main
+    uses: Datawheel/.github/.github/workflows/gcp-deploy-to-gke.yaml@main
     secrets: inherit
