@@ -1,4 +1,4 @@
-name: "Build Development into DockerHub"
+name: "Build Development Docker Image into DockerHub"
 
 # trigger the workflow when a push is committed to the develop branch
 on:
@@ -17,9 +17,8 @@ env:
 
 jobs:
   docker:
-    name: Build and Push Image to DockerHub
+    name: Build and Push Development Docker Image into DockerHub
     runs-on: ubuntu-latest
-    environment: develop_environment
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2

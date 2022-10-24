@@ -1,4 +1,4 @@
-name: "Build Production into DockerHub"
+name: "Build Production Docker Image into DockerHub"
 
 # trigger the workflow when a release is published
 on:
@@ -15,9 +15,8 @@ env:
 
 jobs:
   docker:
-    name: Build and Push Docker Image to DockerHub
+    name: Build and Push Production Docker Image into DockerHub
     runs-on: ubuntu-latest
-    environment: production_environment
     steps:
       - name: Get release version number
         id: get_version

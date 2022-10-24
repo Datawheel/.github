@@ -1,6 +1,6 @@
 {
   "name": "DockerHub Development Environment",
-  "description": "Build and Push a Docker Image to DockerHub",
+  "description": "Build and Push a Development Docker Image to DockerHub",
   "iconName": "docker",
   "categories": [
       "YAML"
