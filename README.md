@@ -1,21 +1,5 @@
 # .github datawheel repo
 
-## Triggers
-```
-# trigger the workflow when a push is committed to the develop branch
-on:
-  push:
-    branches:
-      - develop
-```
-
-## Environment
-
-Add tag to `job.<job-name>.environment`
-```
-environment: develop_environment
-```
-
 ## Secrets
 
 List of the used secrets
