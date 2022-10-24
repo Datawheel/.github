@@ -1,4 +1,4 @@
-name: "Deploy Deployment on Google Kubernetes Engine"
+name: "Deploy on Google Kubernetes Engine"
 
 # trigger the workflow when another workflow calls it
 on:
