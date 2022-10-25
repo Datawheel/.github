@@ -5,6 +5,10 @@ on:
   workflow_call:
     # list of inputs required by the workflow
     inputs:
+      IMAGE_NAME:
+        description: 'Docker Image Name'
+        required: true
+        type: string
       IMAGE_TAG:
         description: 'Docker Image Tag'
         required: true
