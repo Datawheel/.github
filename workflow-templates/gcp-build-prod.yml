@@ -17,7 +17,7 @@ jobs:
   # builds the docker image via cloud build
   build:
     name: Build Production Docker Image into Artifact Registry
-    uses: Datawheel/.github/.github/workflows/gcp-build-to-registry.yaml@main
+    uses: Datawheel/.github/.github/workflows/gcp-build-to-registry.yml@main
     needs: release
     with:
       IMAGE_TAG: ${{ steps.get_version.outputs.VERSION }}
