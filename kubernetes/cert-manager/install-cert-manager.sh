@@ -7,8 +7,6 @@ helm uninstall -n cert-manager cert-manager
 helm install \
   --namespace cert-manager \
   --create-namespace \
-  --set resources.limits.cpu=5m \
-  --set resources.limits.memory=128Mi \
   -f cert-manager-config.yaml cert-manager jetstack/cert-manager
 
 kubectl apply -f letsencrypt-cert-issuer-prod.yaml
