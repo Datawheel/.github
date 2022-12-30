@@ -1,0 +1,49 @@
+name: "Deploy on Google Kubernetes Engine"
+
+# trigger the workflow when another workflow calls it
+on:
+  workflow_call:
+    # list of secrets required by the workflow
+    secrets:
+      GCP_PROJECT_ID:
+        description: "Google Cloud Project ID"
+        required: true
+      GCP_SA_KEY:
+        description: "Google Cloud Service Account"
+        required: true
+
+jobs:
+  # deploys a docker image via google cloud run
+  deploy:
+    name: Deploy Docker Image on Cloud Run
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Deploy Image to Cloud Run
+        run: |-
+          gcloud run deploy ${{ env.IMAGE_NAME }} \
+            --image=us-central1-docker.pkg.dev/${{env.GCP_PROJECT_ID}}/${{env.GCP_ARTIFACT_REGISTRY_REPO_NAME}}/${{env.IMAGE_NAME}}:latest-dev \
+            --set-env-vars=CANON_CMS_GENERATOR_TIMEOUT=${{ env.CANON_CMS_GENERATOR_TIMEOUT }} \
+            --set-env-vars=CANON_CMS_REQUESTS_PER_SECOND=${{ env.CANON_CMS_REQUESTS_PER_SECOND }} \
+            --set-env-vars=CANON_LANGUAGES=${{ env.CANON_LANGUAGES }} \
+            --set-env-vars=CANON_LANGUAGE_DEFAULT=${{ env.CANON_LANGUAGE_DEFAULT }} \
+            --set-env-vars=CANON_CMS_ENABLE=${{ env.CANON_CMS_ENABLE }} \
+            --set-env-vars=CANON_CMS_LOGGING=${{ env.CANON_CMS_LOGGING }} \
+            --set-env-vars=CANON_API=${{ env.CANON_API }} \
+            --set-env-vars=CANON_CMS_CUBES=${{ env.CANON_CMS_CUBES }} \
+            --set-env-vars=CANON_CMS_DB=${{ env.CANON_CMS_DB }} \
+            --set-env-vars=CANON_CONST_STORAGE_BUCKET=${{ env.CANON_CONST_STORAGE_BUCKET }} \
+            --set-env-vars=FLICKR_API_KEY=${{ env.FLICKR_API_KEY }} \
+            --region=us-central1 \
+            --port=3300 \
+            --min-instances=1 \
+            --max-instances=4 \
+            --allow-unauthenticated
