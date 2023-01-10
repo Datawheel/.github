@@ -33,7 +33,14 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           credentials_json: ${{ secrets.GCP_SA_KEY }}
-
+          
+      # test
+      - name: Print inputs
+        run: |
+          echo "IMAGE_NAME: ${{ inputs.IMAGE_NAME }}"
+          echo "IMAGE_TAG: ${{ inputs.IMAGE_TAG }}"
+          echo "IMAGE_LATEST: ${{ inputs.IMAGE_LATEST }}"
+          
       - name: Build Docker Image
         run: |-
           gcloud builds submit \
