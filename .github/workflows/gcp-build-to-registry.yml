@@ -13,10 +13,10 @@ on:
         description: 'Docker Image Tag'
         required: true
         type: string
-      IMAGE_ENVIRONMENT:
-        description: 'Project Environment'
-        required: false
-        default: 'dev'
+      IMAGE_LATEST:
+        description: 'Image is required to be tagged as Latest'
+        required: true
+        default: 'false'
         type: string
 
 jobs:
@@ -42,7 +42,7 @@ jobs:
             --tag us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REGISTRY_REPO_NAME }}/${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_TAG }}
 
       - name: Add 'Latest' Tag to Development Environments 
-        if: ${{ inputs.IMAGE_ENVIRONMENT }} == 'dev'
+        if: ${{ inputs.IMAGE_LATEST == 'true' }}
         run: |-
           gcloud beta artifacts docker tags add \
             --quiet \
